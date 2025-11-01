@@ -145,7 +145,7 @@ const Home: React.FC = () => {
                 onClick={handleMissClick}
                 className="bg-gradient-to-r from-rose-400 to-pink-400 text-white font-semibold px-6 py-3 rounded-full shadow-md hover:shadow-lg transition"
               >
-                I miss you🧸
+                I miss you!! 🧸
               </button>
               <div className="flex items-baseline gap-2 bg-rose-50 rounded-2xl px-4 py-3">
                 <span className="text-4xl font-bold text-rose-500">{missCount}</span>
