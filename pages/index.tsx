@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 
 interface Flower {
@@ -12,7 +12,10 @@ const Home: React.FC = () => {
   const [showSecret, setShowSecret] = useState(false);
   const [missCount, setMissCount] = useState(0);
   const [nickname, setNickname] = useState("bestie");
-  const [isCuckooPlaying, setIsCuckooPlaying] = useState(true);
+  const [isCuckooPlaying, setIsCuckooPlaying] = useState(false);
+
+  // Ref for the cuckoo audio element
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const pool: Flower[] = [
@@ -34,6 +37,25 @@ const Home: React.FC = () => {
     }
   }, []);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "For my cutest flower";
+  }, []); // Runs once on component mount
+
+  // This effect controls the cuckoo audio
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isCuckooPlaying) {
+        // If state is true, play the sound
+        audioRef.current.play().catch(e => console.error("Audio play failed:", e));
+      } else {
+        // If state is false, pause and rewind
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0; // Rewind to the start
+      }
+    }
+  }, [isCuckooPlaying]); // Runs whenever isCuckooPlaying changes
+
   const handleMissClick = () => {
     setMissCount((prev) => {
       const next = prev + 1;
@@ -53,9 +75,7 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Head>
-        <title>For my cutest flower</title>
-      </Head>
+      {/* <Head> component removed as it's Next.js specific and caused an error */}
       <main className="relative min-h-screen bg-gradient-to-b from-pink-50 via-rose-50 to-pink-100 text-rose-900">
         {/* floating background flowers */}
         <div className="pointer-events-none fixed inset-0 overflow-hidden opacity-30">
@@ -159,8 +179,17 @@ const Home: React.FC = () => {
 
           {/* Cuckoo Bird Section */}
           <section className="bg-white/80 rounded-3xl shadow-md p-6 flex flex-col gap-4 items-center text-center">
+            
+            {/* THIS IS THE NEW AUDIO TAG */}
+            {/* !! YOU MUST CHANGE THE SRC PATH !! */}
+            <audio 
+              ref={audioRef} 
+              src="/cuckoo-call.mp3"
+              preload="auto" 
+            />
+
             <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-semibold text-rose-900">🐦 My cute cuckooooo!</h2>
+              <h2 className="text-2xl font-semibold text-rose-900">🐦 My Cutie Pie 🌻</h2>
               <button
                 onClick={() => setIsCuckooPlaying((prev) => !prev)}
                 className="text-xs bg-rose-100 text-rose-500 px-3 py-1 rounded-full font-medium"
@@ -168,7 +197,7 @@ const Home: React.FC = () => {
                 {isCuckooPlaying ? "Pause" : "Make it sing"}
               </button>
             </div>
-            <p className="text-rose-700">Because even the birds should know you are special.</p>
+            <p className="text-rose-700">“Your voice is absolutely mesmerizing — it feels like every note you sing has a soul of its own.”</p>
             <div className="relative flex items-center justify-center w-full">
               <div
                 className={`flex items-center justify-center bg-gradient-to-b from-rose-200 to-pink-200 w-28 h-28 rounded-full shadow-inner border-4 border-pink-100 ${
@@ -201,3 +230,4 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
